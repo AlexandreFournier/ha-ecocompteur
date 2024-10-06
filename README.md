@@ -12,6 +12,8 @@
 
 _Integration to integrate with [ecocompteur][ecocompteur]._
 
+![Photo of Ecocompteur](images/photo.png)
+
 **This integration will set up the following platforms.**
 
 Platform | Description
