@@ -1,0 +1,21 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "L'appareil est déjà configuré"
+        },
+        "error": {
+            "cannot_connect": "Connexion impossible",
+            "unknown": "Erreur inattendue"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Le nom de machine ou l'adresse IP de votre appareil Ecocompteur."
+                }
+            }
+        }
+    }
+}
