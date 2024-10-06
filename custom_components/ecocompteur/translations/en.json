@@ -1,0 +1,21 @@
+{
+    "abort": {
+        "already_configured": "Device is already configured"
+    },
+    "config": {
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "unknown": "Unexpected error"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "The hostname or IP address of your Ecocompteur device."
+                }
+            }
+        }
+    }
+}
