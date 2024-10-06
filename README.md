@@ -10,7 +10,7 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
-_Integration to integrate with [ecocompteur][ecocompteur]._
+_Integration to integrate with [Legrand Ecocompteur (412000)][ecocompteur]._
 
 ![Photo of Ecocompteur](images/photo.png)
 
