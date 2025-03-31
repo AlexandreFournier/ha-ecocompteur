@@ -1,10 +1,10 @@
 """Helper functions for the Ecocompteur."""
 
-import httpx
 import json
-import re
 import logging
+import re
 
+import httpx
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.httpx_client import get_async_client
 
@@ -12,7 +12,11 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class EcocompteurApiError(Exception):
-    """Ecocompteur client exception."""
+    """Ecocompteur API exception."""
+
+
+class EcocompteurJSONDecodeError(Exception):
+    """Ecocompteur JSON decode exception."""
 
 
 STATUS_CODE_OK = 200
@@ -169,14 +173,14 @@ class Ecocompteur:
         raw_text = r.text
 
         # Correction des entiers avec des zéros en tête
-        corrected_text = re.sub(r':\s*0+([1-9]\d*)', r': \1', raw_text)
+        corrected_text = re.sub(r":\s*0+([1-9]\d*)", r": \1", raw_text)
 
         try:
             j = json.loads(corrected_text)
         except json.JSONDecodeError as e:
-            _LOGGER.error("Erreur JSON depuis l’Ecocompteur: %s", e)
-            _LOGGER.debug("JSON brut corrigé reçu : %s", corrected_text)
-            raise EcocompteurApiError("Réponse JSON invalide reçue depuis l’Ecocompteur.") from e
+            _LOGGER.exception("JSONDecodeError on corrected JSON")
+            _LOGGER.debug("Corrected JSON: %s", corrected_text)
+            raise EcocompteurJSONDecodeError from e
 
         ret = {
             "option_tarifaire": j["option_tarifaire"],
