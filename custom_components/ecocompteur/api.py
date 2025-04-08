@@ -34,7 +34,7 @@ class Ecocompteur:
         uri = f"http://{self.host}/{name}"
         try:
             async_client = get_async_client(self.hass)
-            r = await async_client.get(uri, timeout=5)
+            r = await async_client.get(uri, timeout=30)
             if r.status_code != STATUS_CODE_OK:
                 raise EcocompteurApiError
         except httpx.ConnectTimeout as e:
