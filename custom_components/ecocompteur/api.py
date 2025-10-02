@@ -3,7 +3,8 @@
 import json
 import logging
 import re
-
+import csv
+import io
 import httpx
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.httpx_client import get_async_client
@@ -209,6 +210,9 @@ class Ecocompteur:
             if disabled:
                 label = "N/A"
             ret["inputs"].append({"label": label, "type": stype, "disabled": disabled})
+        for i in range(1, 6):
+            label = j[f"label_entree{i}"].strip()
+            ret["inputs"].append({"label": label, "type": 0, "disabled": False})
         return ret
 
     async def fetch_inst(self) -> dict:
@@ -239,8 +243,23 @@ class Ecocompteur:
             "Date_Time":1727865642
         }
         """
-        r = await self._fetch("inst.json")
-        return r.json()
+        r_inst = await self._fetch("inst.json")
+        inst_data = r_inst.json()
+        r_log = await self._fetch("log2.csv")
+        log_text = r_log.text
+        rows = list(csv.reader(io.StringIO(log_text), delimiter=";"))
+        if rows:
+            last_row = rows[-1]
+            log_data = {
+                "circuit1": float(last_row[7]),
+                "circuit2": float(last_row[9]),
+                "circuit3": float(last_row[11]),
+                "circuit4": float(last_row[13]),
+                "circuit5": float(last_row[15]),
+            }
+        else:
+            log_data = {}
+        return {**inst_data, **log_data}
 
     async def fetch_log1(self) -> str:
         """Fetch Ecocompteur statistics."""
