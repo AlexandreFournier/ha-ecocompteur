@@ -174,6 +174,41 @@ SENSORS: tuple[EcocompteurSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.GAS,
         native_unit_of_measurement=UnitOfVolume.CUBIC_METERS,
     ),
+    EcocompteurSensorEntityDescription(
+        key="circuit1",
+        config_idx=11,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+    ),
+    EcocompteurSensorEntityDescription(
+        key="circuit2",
+        config_idx=12,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+    ),
+    EcocompteurSensorEntityDescription(
+        key="circuit3",
+        config_idx=13,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+    ),
+    EcocompteurSensorEntityDescription(
+        key="circuit4",
+        config_idx=14,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+    ),
+    EcocompteurSensorEntityDescription(
+        key="circuit5",
+        config_idx=15,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+    ),
 )
 
 
