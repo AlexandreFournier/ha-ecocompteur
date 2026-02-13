@@ -1,0 +1,29 @@
+services:
+  ecocompteur-simulator-1:
+    build: .
+    container_name: ecocompteur-simulator-1
+    networks:
+      ecocompteur_net:
+        ipv4_address: 172.28.0.10
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+
+  ecocompteur-simulator-2:
+    build: .
+    container_name: ecocompteur-simulator-2
+    networks:
+      ecocompteur_net:
+        ipv4_address: 172.28.0.11
+    ports:
+      - "8082:80"
+    restart: unless-stopped
+
+networks:
+  ecocompteur_net:
+    name: simulator_ecocompteur_net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+          gateway: 172.28.0.1

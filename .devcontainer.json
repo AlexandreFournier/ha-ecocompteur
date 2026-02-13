@@ -1,6 +1,9 @@
 {
     "name": "AlexandreFournier/ha-ecocompteur",
     "image": "mcr.microsoft.com/devcontainers/python:3.13",
+    "runArgs": [
+        "--network=simulator_ecocompteur_net"
+    ],
     "postCreateCommand": "scripts/setup",
     "forwardPorts": [
         8123
