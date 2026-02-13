@@ -2,6 +2,7 @@
 
 import ipaddress
 import logging
+import uuid
 from dataclasses import dataclass
 
 import voluptuous as vol
@@ -43,6 +44,29 @@ class EcocompteurRuntimeData:
 
     name: str
     host: str
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Migrate old config entry to new format."""
+    _LOGGER.debug("Migrating config entry from version %s", entry.version)
+
+    if entry.version == 1:
+        # Version 1 used a single unique ID for the entire integration
+        # Version 2 uses a UUID per device to support multiple instances
+        new_unique_id = str(uuid.uuid4())
+
+        hass.config_entries.async_update_entry(
+            entry,
+            unique_id=new_unique_id,
+            version=2,
+        )
+
+        _LOGGER.info(
+            "Migrated config entry to version 2 with new unique ID: %s",
+            new_unique_id,
+        )
+
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

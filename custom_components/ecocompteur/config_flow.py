@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import uuid
 from typing import Any
 
 import voluptuous as vol
@@ -25,7 +26,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 class EcocompteurConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Ecocompteur."""
 
-    VERSION = 1
+    VERSION = 2
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
@@ -36,6 +37,12 @@ class EcocompteurConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             host = user_input[CONF_HOST]
 
+            # Generate a unique ID for this device instance
+            # This allows multiple Ecocompteur devices to be configured
+            unique_id = str(uuid.uuid4())
+            await self.async_set_unique_id(unique_id)
+            self._abort_if_unique_id_configured()
+
             client = Ecocompteur(self.hass, host)
             try:
                 await client.fetch_data()
@@ -43,9 +50,9 @@ class EcocompteurConfigFlow(ConfigFlow, domain=DOMAIN):
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "cannot_connect"
             else:
-                await self._async_handle_discovery_without_unique_id()
-                self._abort_if_unique_id_configured()
-                return self.async_create_entry(title=DOMAIN, data=user_input)
+                # Use a descriptive title with the host or custom name
+                title = user_input.get(CONF_NAME, f"{DEFAULT_NAME} ({host})")
+                return self.async_create_entry(title=title, data=user_input)
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
