@@ -244,6 +244,7 @@ class EcocompteurTicSensor(CoordinatorEntity, SensorEntity):
         self._coordinator = coordinator
         self._attr_device_info = device_info
         self._attr_unique_id = f"{entry_id}_conso_{entity_description.key}"
+        self._update_attrs()
 
     def _update_attrs(self) -> None:
         """Update state attributes."""
@@ -279,6 +280,7 @@ class EcocompteurSensor(CoordinatorEntity, SensorEntity):
         self._coordinator = coordinator
         self._attr_device_info = device_info
         self._attr_unique_id = f"{entry_id}_{entity_description.key}"
+        self._update_attrs()
 
     def _update_attrs(self) -> None:
         """Update state attributes."""
@@ -291,6 +293,8 @@ class EcocompteurSensor(CoordinatorEntity, SensorEntity):
             key = self.entity_description.key
             values = self._coordinator.data["values"]
             self._attr_native_value = values[key]
+        else:
+            self._attr_native_value = None
 
     @callback
     def _handle_coordinator_update(self) -> None:

@@ -6,7 +6,7 @@ from typing import Any
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import Ecocompteur, EcocompteurApiError
+from .api import Ecocompteur, EcocompteurApiError, EcocompteurJSONDecodeError
 from .const import DEFAULT_SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
@@ -33,24 +33,18 @@ class EcocompteurDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def _async_setup(self) -> None:
         """Set up the coordinator."""
-        try:
-            self.data = {
-                "config": await self.client.fetch_data(),
-                "values": await self.client.fetch_inst(),
-            }
-        except EcocompteurApiError as err:
-            msg = "Error during state cache update"
-            raise UpdateFailed(msg) from err
+        self.data = await self._async_update_data()
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch state update."""
         try:
-            self.data = {
+            return {
                 "config": await self.client.fetch_data(),
                 "values": await self.client.fetch_inst(),
             }
         except EcocompteurApiError as err:
-            msg = "Error during state cache update"
+            msg = "Error communicating with Ecocompteur"
             raise UpdateFailed(msg) from err
-        else:
-            return self.data
+        except EcocompteurJSONDecodeError as err:
+            msg = "Error decoding Ecocompteur JSON response"
+            raise UpdateFailed(msg) from err

@@ -10,7 +10,7 @@ import voluptuous as vol
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_NAME
 
-from .api import Ecocompteur, EcocompteurApiError
+from .api import Ecocompteur, EcocompteurApiError, EcocompteurJSONDecodeError
 from .const import DEFAULT_NAME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -47,7 +47,10 @@ class EcocompteurConfigFlow(ConfigFlow, domain=DOMAIN):
             try:
                 await client.fetch_data()
             except EcocompteurApiError:
-                _LOGGER.exception("Unexpected exception")
+                _LOGGER.exception("Error communicating with Ecocompteur")
+                errors["base"] = "cannot_connect"
+            except EcocompteurJSONDecodeError:
+                _LOGGER.exception("Error decoding Ecocompteur JSON response")
                 errors["base"] = "cannot_connect"
             else:
                 # Use a descriptive title with the host or custom name

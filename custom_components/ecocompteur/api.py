@@ -36,10 +36,9 @@ class Ecocompteur:
             async_client = get_async_client(self.hass)
             r = await async_client.get(uri, timeout=30)
             if r.status_code != STATUS_CODE_OK:
-                raise EcocompteurApiError
-        except httpx.ConnectTimeout as e:
-            raise EcocompteurApiError from e
-        except httpx.ConnectError as e:
+                msg = f"HTTP {r.status_code}"
+                raise EcocompteurApiError(msg)
+        except httpx.HTTPError as e:
             raise EcocompteurApiError from e
         else:
             return r
@@ -110,7 +109,7 @@ class Ecocompteur:
                 "hc_r" : 0,
                 "hp_r" : 0,
             },
-            "entree": [
+            "inputs": [
                 {
                     "label": "Consommation globale",
                     "type" : 0,

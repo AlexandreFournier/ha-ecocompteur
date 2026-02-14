@@ -72,7 +72,7 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Ecocompteur via a config entry."""
     host = entry.data[CONF_HOST]
-    name = entry.options.get(CONF_NAME, DEFAULT_NAME)
+    name = entry.data.get(CONF_NAME, DEFAULT_NAME)
     entry.runtime_data = EcocompteurRuntimeData(name=name, host=host)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
